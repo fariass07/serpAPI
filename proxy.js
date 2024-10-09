@@ -14,7 +14,7 @@ app.get('/search', async (req, res) =>
     const { query } = req.query;
     
     const URL = 'https://serpapi.com/search.json';
-    const apiKey = '89b0885a17c91a8245f9754d862b30b237ac4e393edc0757533fdcfe9f0cad15';
+    const apiKey = 'a29c58189d329efd65cfa343ef9a0d99df0887e8177fe39a3e0285a6cfb14be1';
     
   try
   {
