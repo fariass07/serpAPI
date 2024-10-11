@@ -1,9 +1,10 @@
 import Search from "./components/Search";
 
 function App() {
+
   return (
-    <Search></Search>
-  )
+   <Search></Search>
+)
 }
 
-export default App;
+export default App

@@ -1,33 +1,28 @@
-const express = require("express");
-const axios = require("axios");
-const cors = require("cors");
-const PORT = 4000;
+import axios from 'axios';
+import cors from 'cors';
+import express from 'express';
+const app = express();
 
-const app = express ();
+const PORT = 4000;
 
 app.use(cors());
 
-app.get("/search", async (req, res) => 
-  {
-
-    const { query } = req.query;
-    
-    const URL = 'https://serpapi.com/search.json';
-    const apiKey = 'a29c58189d329efd65cfa343ef9a0d99df0887e8177fe39a3e0285a6cfb14be1';
-    
-  try
-  {
-    const response = await axios.get(URL, {
+app.get("/search", async (req, res) => {
+  const { query } = req.query;
+  const API_KEY =
+    "ea05a442342e8aec705830c67c02f66cae5a3d573d0ddf6a9bdc0be9313f9732";
+  try {
+    const response = await axios.get("https://serpapi.com/search.json", {
       params: {
         q: query,
-        api_key: apiKey,
-        num: 10,
         engine: "google",
         google_domain: "google.com.br",
+        api_key: API_KEY,
+        hl: "pt-br",
         gl: "br",
-        h1: "pt-br"
-      }
-  });
+        num: 10,
+      },
+    });
   res.json(response.data)
 } catch{
   res.status(500).json({error: "Ocorreu um erro ao fazer a requisição à API."})
@@ -35,6 +30,6 @@ app.get("/search", async (req, res) =>
   });
     
 
-app.listen(PORT, () => (
-  console.log(`O proxy está rodando na porta ${PORT}.`)
-));
+  app.listen(PORT, () => {
+    console.log(`Proxy rodando na porta ${PORT}`);
+  });

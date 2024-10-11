@@ -1,83 +1,79 @@
-import { useState } from "react";
 import axios from "axios";
+import { useState } from "react";
 import "../App.css";
+import Noodle from '../assets/miojo.png'
+
 export default function Search() {
-  
+
   const [query, setQuery] = useState("");
-  
+  const [results, setResults] = useState([]);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [error, setError] = useState(false);
-
-  const [results, setResults] = useState([]);
-
-  
-  const handleQuery = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!query) return;
-    setLoading(true);
     setError("");
 
+    if (!query) return;
+    
     try {
+      setLoading(true);
+    
       const res = await axios.get(`http://localhost:4000/search`, {
-        params: {
-          query,
-        },
-      });
-      setResults(res.data.organic_results || []);
-    } catch (err) {
-      console.error(err.message);
-      setError("Não foi possível fazer a busca");
+        params:{
+          query:query
+        }
+      })
+
+      const data = res.data.organic_results || [];
+      setResults(data);     } catch (err) {
+      console.error(err);
+      setError("Ocorreu um erro ao fazer a busca");
     } finally {
       setLoading(false);
     }
   };
-  return (
-    <>
-      <div className="App">
-        <div className="logo">
-          <h1>Goggle</h1>
-          <img id="goggle-logo" src="goggles.svg" alt="Goggles" />
-        </div>
-        <form onSubmit={handleQuery}>
-          <label>
-            Searc
-            <input
-              type="text"
-              name="query"
-              onChange={(e) => {
-                setQuery(e.target.value);
-              }}
-              value={query}
-            />
-          </label>
-          <button type="submit">Buscar</button>
-        </form>
 
-        {error ? (
-          <p>{error}</p>
-        ) : loading ? (
-          <p>Carregando...</p>
-        ) : (
-          <ul>
-            {results.map((result, index) => {
-              return (
-                <li key={index}>
-                  <a
-                    href={result.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {result.title}
-                  </a>
-                  <p>{result.snippet}</p>
-                </li>
-              );
-            })}
-          </ul>
-        )}
+  return (
+    <div className="App">
+      <div className="title">
+        <h1>Noodle</h1>
+        <img src={Noodle} alt="Miojo" /> 
       </div>
-    </>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Digite sua busca:"
+          onChange={(e) => setQuery(e.target.value)} 
+        />
+        <button type="submit">Buscar</button>
+      </form>
+      <div>
+          {error ? (
+            <h3>{error}</h3>
+          ) : loading ? (
+            <h3>Carregando...</h3>
+          ) : (
+            <ul>
+            {results.map((result, index) => (
+              <li key={index}>
+                <a 
+                href={result.link} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                >
+                  {result.title}
+                  </a>
+                <p>
+                  {result.snippet}
+                  </p>
+              </li>
+            ))}
+        </ul>
+          )}
+      </div>
+    </div>
   );
-}
+};
+
